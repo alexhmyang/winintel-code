@@ -1,0 +1,46 @@
+name: Ubuntu smoke test
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  ubuntu:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate source
+        run: |
+          bash -n install.sh
+          PYTHONPYCACHEPREFIX="$RUNNER_TEMP/pycache" python3 -m py_compile winintel_code.py
+      - name: Install pinned engine
+        run: |
+          bash install.sh
+          ~/.local/bin/winintel-code doctor
+      - name: Load generated config and start Web server
+        run: |
+          python3 - <<'PY'
+          import winintel_code as app
+          app.configure("http://127.0.0.1:8000/v1", "test-model", "local")
+          assert (app.CONFIG_DIR / "settings.json").stat().st_mode & 0o777 == 0o600
+          PY
+          ~/.local/bin/winintel-code web --project "$GITHUB_WORKSPACE" --port 4096 > "$RUNNER_TEMP/web.log" 2>&1 &
+          agent_pid=$!
+          trap 'kill "$agent_pid" 2>/dev/null || true; cat "$RUNNER_TEMP/web.log"' EXIT
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4096/global/health > "$RUNNER_TEMP/health.json"; then
+              break
+            fi
+            sleep 1
+          done
+          python3 - "$RUNNER_TEMP/health.json" <<'PY'
+          import json, sys
+          assert json.load(open(sys.argv[1]))["healthy"] is True
+          PY
+          curl -fsS http://127.0.0.1:4096/config > "$RUNNER_TEMP/config.json"
+          python3 - "$RUNNER_TEMP/config.json" <<'PY'
+          import json, sys
+          config = json.load(open(sys.argv[1]))
+          assert config["default_agent"] == "winintel"
+          assert config["model"] == "winintel/test-model"
+          assert config["provider"]["winintel"]["options"]["baseURL"] == "http://127.0.0.1:8000/v1"
+          PY
