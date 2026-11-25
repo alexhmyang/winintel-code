@@ -130,8 +130,11 @@ rm -f ~/.local/bin/winintel-code ~/.local/share/applications/winintel-code.deskt
 ## 开发与验证
 
 项目运行代码仅依赖 Python 标准库，桌面使用 tkinter。
-GitHub Actions 在 Ubuntu 上下载固定版本引擎，检查安装、配置加载和 Web 健康接口。
-这些检查不调用付费模型；真实编程效果取决于所连接的模型。
+Ubuntu 安装、配置加载和 Web 健康接口已在 Ubuntu 24.04 / x86_64 的 WSL 环境实测通过。
+仓库提供 [GitHub Actions 模板](ci/ubuntu-smoke.yml)，复制到
+`.github/workflows/ubuntu-smoke.yml` 可启用自动检查。模板在 Ubuntu 上下载固定版本引擎，
+检查安装、配置加载和 Web 健康接口。这些检查不调用付费模型；
+真实编程效果取决于所连接的模型。ARM64 安装分支与桌面窗口尚未在对应环境实测。
 
 ```bash
 bash -n install.sh

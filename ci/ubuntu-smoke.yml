@@ -1,3 +1,4 @@
+# Copy to .github/workflows/ubuntu-smoke.yml to enable GitHub Actions.
 name: Ubuntu smoke test
 on: [push, pull_request, workflow_dispatch]
 permissions:
