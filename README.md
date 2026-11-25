@@ -1,34 +1,68 @@
 # winintel-code · 数萌 AI 编程助手
 
-**面向 Ubuntu 的开源 Code Agent：选择项目，用中文描述任务，让 AI 读代码、改文件、执行命令和验证结果。**
+**中文** | [English](README.en.md)
 
-为希望在 Ubuntu 使用桌面编程助手的用户提供可安装的入口。支持 Ubuntu
-x86_64 / ARM64，可接云端模型，也可接自建 vLLM、Ollama 和 OpenAI 兼容接口。
-由 **winintel AI（数萌AI服务器）**维护，采用 MIT 许可。
+**面向 Ubuntu 和私有模型的开源编程助手：选择项目，描述任务，让 AI 读取代码、修改文件、调用工具并执行检查。**
 
-首版基于 [OpenCode](https://github.com/anomalyco/opencode) v1.19.6：
-编程引擎和浏览器工作界面来自 OpenCode；本项目实现 Ubuntu 安装器、
-桌面项目选择器、模型设置、中文 Agent 和命令行入口。桌面入口打开浏览器中的
-完整编程界面，当前不提供自行开发的代码编辑器。本项目与 OpenCode 团队、
-WorkBuddy 均无隶属关系，版权见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+由 **winintel AI（数萌AI服务器）**维护，基于 MIT 开源项目
+[OpenCode](https://github.com/anomalyco/opencode)。可以接入自己的 vLLM、
+Ollama 或 OpenAI 兼容服务，也可以在 OpenCode 界面连接云端模型。
 
-## 能做什么
+我们持续优化的方向是：让客户部署的模型稳定完成开发任务，并把模型服务、
+编程助手、客户配置和验收资料组成一套私有化交付方案。
+
+[快速安装](#快速安装) · [配置模型](#配置模型) · [私有化交付](#私有化交付方案) ·
+[优化路线](#持续优化路线) · [版本下载](https://github.com/alexhmyang/winintel-code/releases)
+
+## 当前版本与开源基础
+
+当前版本为 **v0.1.0**，安装器固定下载 **OpenCode v1.19.6**。
+
+| 组成 | 来源与职责 |
+|---|---|
+| 编程引擎、工具调用、会话和浏览器工作界面 | OpenCode |
+| Ubuntu 用户级安装器 | winintel-code |
+| 桌面项目选择、模型设置和服务启动／停止 | winintel-code |
+| 默认中文 Agent 指令和命令行入口 | winintel-code |
+| 模型推理 | 用户配置的私有服务或云端服务 |
+
+桌面入口通过浏览器打开 OpenCode 编程界面；当前没有自研代码编辑器，
+也不宣称已经提升原版的编程成功率或推理性能。
+本项目与 OpenCode 团队和 WorkBuddy 均无隶属关系。
+
+## 现在可以使用的能力
 
 | 能力 | 使用方式 |
 |---|---|
-| Ubuntu 桌面入口 | 应用菜单启动，选择项目目录与模型 |
-| 中文编程助手 | 需求实现、代码解释、故障修复、运行项目检查 |
-| 编程工作界面 | OpenCode 浏览器界面，查看会话、工具调用与文件修改 |
-| 终端交互 | `winintel-code tui` |
-| 单次任务 | `winintel-code run "任务描述"` |
-| 自建模型 | vLLM / Ollama / OpenAI 兼容 API |
-| 云端模型 | 在 OpenCode 界面连接服务商账户 |
-| 本机访问 | Web 服务固定绑定 `127.0.0.1` |
+| Ubuntu 桌面启动器 | 应用菜单选择项目目录，设置模型，启动或停止服务 |
+| 默认中文编程助手 | 描述需求、解释代码、修复问题、修改文件 |
+| 浏览器工作界面 | 使用 OpenCode 查看会话、工具调用和文件修改 |
+| 终端交互 | `winintel-code tui --project ~/my-project` |
+| 单次任务 | `winintel-code run --project ~/my-project "任务描述"` |
+| 私有模型接入 | 配置服务地址、实际模型 ID 和 API Key |
+| 云端模型接入 | 在 OpenCode 界面连接服务商账号 |
+| 本机服务 | Web 入口绑定 `127.0.0.1`，默认端口 `4096` |
 
-## Ubuntu 安装
+执行命令、运行测试和完成复杂任务取决于模型能力、服务端工具调用配置和实际权限。
+模型服务和模型权重需另外部署，本仓库不附带模型。
 
-建议 Ubuntu 22.04 / 24.04。需要 Python 3、curl、tar；桌面选择器需要 tkinter。
-安装器下载固定版本 OpenCode，不需要 npm、Docker 或 root 安装。
+## 环境与验证范围
+
+| 环境 | 支持与验证范围 |
+|---|---|
+| Ubuntu 24.04 / x86_64 / WSL | 已完成安装、配置加载、Web 健康接口和页面访问检查 |
+| Ubuntu 22.04 / x86_64 | 目标平台；需补对应环境验收 |
+| Ubuntu / ARM64 | 安装器提供 ARM64 引擎分支；需补设备验收 |
+| Ubuntu 原生桌面 | 已提供 tkinter 启动器；需补桌面交互验收 |
+| 无桌面的 Ubuntu 服务器 | 可启动 Web 服务，通过 SSH 转发访问 |
+
+安装依赖 Python 3、curl 和 tar；桌面启动器另外需要 `python3-tk`。
+程序安装在当前用户目录，不需要 npm、Docker 或 root 安装。
+安装系统依赖时使用 `sudo`。
+
+## 快速安装
+
+在 Ubuntu 终端执行：
 
 ```bash
 sudo apt update
@@ -40,83 +74,180 @@ export PATH="$HOME/.local/bin:$PATH"
 winintel-code doctor
 ```
 
-安装后在应用菜单打开 **winintel AI Code Agent**。选择代码目录：
+安装器从 GitHub 下载固定版本引擎，首次安装需要网络。
+也可在[版本页面](https://github.com/alexhmyang/winintel-code/releases)下载源码包，
+解压后进入目录运行 `bash install.sh`。源码包不包含模型或离线运行所需的全部资源。
 
-1. 使用云端模型：模型接口留空，启动后在 OpenCode 界面连接服务商并选择模型。
-2. 使用本地模型：填写接口、模型 ID 与 API Key，再点击“启动编程助手”。
-3. 浏览器打开 `http://127.0.0.1:4096`。选择 `winintel` Agent 后用中文描述任务。
-4. 保持启动器窗口开启；点击“停止”或关闭窗口结束其启动的服务。
+### 桌面使用
 
-也可以直接打开编程界面：
+1. 在应用菜单打开 **winintel AI Code Agent**。
+2. 选择已有的代码项目目录。
+3. 使用私有模型时填写接口、模型 ID 和密钥；使用云端模型时将模型接口留空。
+4. 点击“启动编程助手”，在浏览器打开 `http://127.0.0.1:4096`。
+5. 确认使用 `winintel` Agent；云端模型用户先在编程界面连接账号并选择模型。
+6. 描述任务，例如“阅读项目，修复启动失败，并执行相关测试”。
+
+保持启动器窗口开启。点击“停止”或关闭窗口，会停止该窗口启动的服务。
+启动器标签及默认 Agent 指令使用中文；可以向模型输入英文任务。
+
+### 终端使用
+
+将 `~/my-project` 替换为实际存在的项目目录：
 
 ```bash
-~/.local/bin/winintel-code web --project ~/你的项目
+# 浏览器界面
+~/.local/bin/winintel-code web --project ~/my-project
+
+# 终端交互
+~/.local/bin/winintel-code tui --project ~/my-project
+
+# 自定义本机端口
+~/.local/bin/winintel-code web --project ~/my-project --port 4097
 ```
 
-终端交互：
+CLI 启动的服务在终端运行，使用 `Ctrl+C` 停止。
+上面的 `export PATH=...` 只影响当前终端；新终端可以继续使用完整命令路径。
 
-```bash
-~/.local/bin/winintel-code tui --project ~/你的项目
-```
+## 配置模型
 
-## 接入自己的 vLLM
+### vLLM / winintel-vllm / OpenAI 兼容服务
 
-先让 vLLM 服务提供 OpenAI 兼容接口。模型必须支持工具调用，
-服务端需按所用模型设置对应的 tool-call parser。通过 `/v1/models`
-确认实际模型 ID；接口连通不等于模型具备可靠的 Agent 能力。
+先部署模型服务，确认它支持工具调用，并按模型要求配置服务端的
+tool-call parser。模型 ID 使用 `/v1/models` 返回的实际值，不能随意填写。
 
-在桌面设置中填写：
-
-| 设置项 | 示例 |
+| 设置项 | 示例与说明 |
 |---|---|
-| 模型接口 | `http://127.0.0.1:8000/v1` |
-| 模型 ID | `/v1/models` 返回的实际 ID，例如 `Qwen3-Coder` |
-| API Key | 服务端密钥；无认证的本地服务留空 |
+| 模型接口 | `http://127.0.0.1:8000/v1`；远程模型填写服务器地址 |
+| 模型 ID | 服务端实际 ID；下方示例使用 `Qwen3-Coder` |
+| API Key | 服务端密钥；无认证的本地服务可留空 |
 
-命令行设置会隐藏密钥输入：
+在桌面填写以上信息，或执行：
 
 ```bash
-winintel-code configure --base-url http://127.0.0.1:8000/v1 --model Qwen3-Coder
+~/.local/bin/winintel-code configure \
+  --base-url http://127.0.0.1:8000/v1 \
+  --model Qwen3-Coder
 ```
 
-服务器已有 winintel-vllm 时，可以直接填其服务地址。
-[winintel-vllm](https://github.com/alexhmyang/winintel-vllm) 负责模型推理，
-winintel-code 负责开发任务。
+命令会隐藏密钥输入；无认证的本地服务直接回车。随后启动 `web` 或 `tui`。
+配置只保存在当前客户端，不会自动修改推理服务器。
 
-## 接入 Ollama
+### Ollama
 
-在 Ollama 安装并运行一个支持工具调用的编程模型后，将接口设置为
-`http://127.0.0.1:11434/v1`，模型 ID 填写 `ollama list` 中的名称，
-API Key 留空。首次加载与响应速度取决于模型和硬件。
+使用 `ollama list` 查看已经安装的模型，选择支持工具调用的模型：
+
+| 设置项 | 值 |
+|---|---|
+| 模型接口 | `http://127.0.0.1:11434/v1` |
+| 模型 ID | `ollama list` 显示的实际模型名称 |
+| API Key | 本地无认证服务留空 |
+
+模型首次加载时间、生成速度和任务质量取决于模型、硬件及服务配置。
+
+### 云端模型
+
+在桌面启动器中将模型接口留空，然后启动编程界面，
+通过 OpenCode 连接服务商并选择模型。服务商凭据由 OpenCode 管理，
+用量、费用和账户条件按对应服务商规则执行。
 
 ## 单次任务与权限
 
 ```bash
-winintel-code run --project ~/你的项目 "阅读代码，解释这个项目的启动流程"
-winintel-code run --trusted --project ~/你的项目 "修复测试失败并运行相关测试"
+# 默认不允许执行 shell
+~/.local/bin/winintel-code run --project ~/my-project \
+  "阅读代码，解释项目的启动流程"
+
+# 允许本次任务执行 shell，包括运行测试
+~/.local/bin/winintel-code run --trusted --project ~/my-project \
+  "修复测试失败并运行相关测试"
 ```
 
-交互界面默认允许编辑文件，执行 shell 和访问项目外目录时询问。
-单次任务默认禁止 shell；`--trusted` 允许该任务执行 shell。
-权限通过 OpenCode 配置实现，不是操作系统沙箱；所选项目原有 OpenCode 配置
-也会参与合并。请在你授权 Agent 操作的代码目录中使用。
-云端模型会接收任务中使用的代码上下文；自建模型可将推理放在自己的服务器上。
+| 模式 | winintel 默认权限 |
+|---|---|
+| 交互式 Web / TUI | 文件编辑允许；shell 和项目外目录访问询问 |
+| 单次 `run` | 文件编辑允许；shell 禁止 |
+| 单次 `run --trusted` | 文件编辑与 shell 允许 |
 
-## 配置、日志与卸载
+这些是 OpenCode 应用层权限，不是操作系统沙箱。
+项目原有 OpenCode 配置也会参与合并，应检查最终生效设置。
+不带 `--trusted` 的单次任务也可能修改文件。
+
+云端推理会向所选服务商发送任务需要的上下文。使用私有模型可以把推理放在自己的
+服务器上；完整断网运行是单独规划和验收的能力。
+
+## 私有化交付方案
+
+我们计划将 **模型服务＋winintel-code＋客户配置＋使用与验收资料**一起交付。
+现版可以手动预配置私有模型接口；自动客户打包、完整离线运行、升级回退等能力
+按下方路线推进。
+
+| 组成 | 交付内容 |
+|---|---|
+| 编程客户端 | 安装器、固定版本引擎、桌面和终端入口 |
+| 私有模型服务 | 客户选择的模型、推理服务和硬件配置方案 |
+| 客户配置 | 接口、模型、适配参数与客户允许的任务设置 |
+| 客户凭据 | 分别注入或由客户输入，不放入公共仓库及共享包 |
+| 验收资料 | 模型任务效果、服务器检查、约定并发下的性能表格 |
+| 维护资料 | 安装、使用、诊断、升级和回退教程 |
+
+相关项目：[winintel-vllm](https://github.com/alexhmyang/winintel-vllm) 负责推理，
+[winintel-server-doctor](https://github.com/alexhmyang/winintel-server-doctor) 负责服务器检查。
+跨项目自动任务流程属于后续规划，当前不作为已实现功能。
+
+## 持续优化路线
+
+| 阶段 | 计划重点 | 预期价值 |
+|---|---|---|
+| v0.2 | 客户配置包、离线资源、诊断与评测基线 | 可重复安装和交付 |
+| v0.3 | 模型能力检测、适配档案、工具错误恢复 | 提高私有模型任务可靠性 |
+| v0.4 | 开发、测试、部署和服务器验收流程 | 从修改代码到完整交付 |
+| v0.5 | 上下文选择、任务状态恢复和缓存策略 | 减少无效输入与重复工作 |
+| v0.6 | 服务端请求调度、账号与项目边界 | 支持多人共用推理资源 |
+| v1.0 | 完整客户方案及升级回退验收 | 可长期维护的私有化产品 |
+
+以上是研发规划，不是当前功能或发布日期承诺。详细目标见
+[创新与持续优化路线图](ROADMAP.md)。
+优化会用同模型、同硬件、同任务对照原版 OpenCode、稳定版和候选版，
+记录任务成功率、耗时、token 用量与并发性能，提升结论以实测为依据。
+
+## 配置、日志与维护
 
 | 项目 | 默认位置 |
 |---|---|
 | 程序与引擎 | `~/.local/share/winintel-code/` |
 | 命令入口 | `~/.local/bin/winintel-code` |
+| 桌面入口 | `~/.local/share/applications/winintel-code.desktop` |
 | 模型设置 | `~/.config/winintel-code/settings.json` |
-| Agent 配置 | `~/.config/winintel-code/opencode.json` |
+| 生成的 Agent 配置 | `~/.config/winintel-code/opencode.json` |
 | 桌面启动日志 | `~/.config/winintel-code/desktop.log` |
-| OpenCode 会话与账号 | 由 OpenCode 管理，独立于上述设置 |
+| OpenCode 会话与账号 | 由 OpenCode 独立管理 |
 
-模型设置包含 API Key，以当前用户可读写的 `0600` 权限保存。
-设置与日志遵循 `XDG_CONFIG_HOME`。不要上传本地设置文件。
-运行 `bash install.sh` 可重新安装当前版本，模型设置不被覆盖。
-不建议将 Web 端口直接暴露到公网；远程 Ubuntu 可通过 SSH 转发本机端口访问。
+模型设置包含密钥，以 `0600` 文件权限保存，不应上传。
+设置与日志遵循 `XDG_CONFIG_HOME`。Agent 配置会在启动时重新生成，
+手动编辑这个生成文件不会成为持久配置。
+
+重新运行 `bash install.sh` 会安装当前源码版本，保留模型设置。
+现版不提供自动升级或回退管理。
+
+| 常见情况 | 处理方式 |
+|---|---|
+| `winintel-code` 命令不存在 | 使用 `~/.local/bin/winintel-code`，或设置 PATH |
+| 提示缺少 tkinter | 执行 `sudo apt install python3-tk` |
+| 项目目录错误 | 选择已存在的目录，含空格的路径用双引号包住 |
+| 桌面服务退出 | 查看 `desktop.log` 中的启动错误 |
+| 端口已占用 | 停止已运行服务，或用 CLI 指定其他 `--port` |
+| 模型没有执行工具 | 检查模型工具能力、实际模型 ID 和服务端解析器 |
+| 配置了本地接口但无法连接 | 检查推理服务、地址、认证和网络连通性 |
+
+远程 Ubuntu 服务器上启动服务后，在访问它的电脑上建立 SSH 转发：
+
+```bash
+ssh -N -L 4096:127.0.0.1:4096 user@server
+```
+
+将 `user@server` 替换为实际登录信息，在该电脑浏览器访问
+`http://127.0.0.1:4096`。现版默认不启用 Web 登录认证，
+入口应保持在受信任的本机环境或通过 SSH 转发使用。
 
 关闭助手后卸载程序：
 
@@ -125,28 +256,26 @@ rm -rf ~/.local/share/winintel-code
 rm -f ~/.local/bin/winintel-code ~/.local/share/applications/winintel-code.desktop
 ```
 
-模型配置与 OpenCode 会话保留，可按需要另行清理。
+该操作保留模型设置、OpenCode 会话和用户项目。
 
-## 开发与验证
+## 开发与贡献
 
-项目运行代码仅依赖 Python 标准库，桌面使用 tkinter。
-Ubuntu 安装、配置加载和 Web 健康接口已在 Ubuntu 24.04 / x86_64 的 WSL 环境实测通过。
-仓库提供 [GitHub Actions 模板](ci/ubuntu-smoke.yml)，复制到
-`.github/workflows/ubuntu-smoke.yml` 可启用自动检查。模板在 Ubuntu 上下载固定版本引擎，
-检查安装、配置加载和 Web 健康接口。这些检查不调用付费模型；
-真实编程效果取决于所连接的模型。ARM64 安装分支与桌面窗口尚未在对应环境实测。
+winintel 启动器依赖 Python 标准库和 tkinter；OpenCode 引擎有其自身依赖。
+仓库提供 [Ubuntu 检查模板](ci/ubuntu-smoke.yml)，复制到
+`.github/workflows/ubuntu-smoke.yml` 可启用 GitHub Actions。
+它检查安装、配置加载和 Web 健康接口，不调用付费模型，也不代表编程任务质量评测。
 
-```bash
-bash -n install.sh
-python3 -m py_compile winintel_code.py
-```
+欢迎提交可复现的问题、模型适配经验和 PR。问题报告请说明系统、架构、
+模型、服务版本、复现步骤及去除密钥后的日志。
 
-## 品牌与联系
+## 许可证与联系
 
-- 维护者：数萌AI服务器 (winintel) / Alex YANG
+项目采用 [MIT License](LICENSE)，OpenCode 版权声明见
+[第三方声明](THIRD_PARTY_NOTICES.md)。修改、二次分发和商业使用时保留相应版权与许可。
+模型和其他依赖各自遵循其许可证；MIT 代码许可不授予上游商标使用权。
+
+- 维护者：**数萌AI服务器 (winintel) / Alex YANG**
 - 官网：https://winintel.com
-- 邮箱：service@winintel.com
+- 联系邮箱：service@winintel.com
 - Bilibili：https://space.bilibili.com/429959998
 - YouTube：https://www.youtube.com/@winintelcom
-
-欢迎提交 Issue 与 PR，一起打造 Linux 上方便使用的开放编程助手。
